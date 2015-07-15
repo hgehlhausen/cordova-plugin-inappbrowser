@@ -869,6 +869,7 @@ public class InAppBrowser extends CordovaPlugin {
 
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            Log.d('LaserImage','Yo');
             handler.proceed(); // Ignore SSL certificate errors
         }
     }
