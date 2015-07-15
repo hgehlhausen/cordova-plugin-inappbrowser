@@ -44,6 +44,8 @@ import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.SslErrorHandler;
+import android.net.http.SslError;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
