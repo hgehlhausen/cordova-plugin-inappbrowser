@@ -866,5 +866,10 @@ public class InAppBrowser extends CordovaPlugin {
                 Log.d(LOG_TAG, "Should never happen");
             }
         }
+
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            handler.proceed(); // Ignore SSL certificate errors
+        }
     }
 }
