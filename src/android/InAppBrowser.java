@@ -44,6 +44,8 @@ import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.SslErrorHandler;
+import android.net.http.SslError;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -865,6 +867,12 @@ public class InAppBrowser extends CordovaPlugin {
             } catch (JSONException ex) {
                 Log.d(LOG_TAG, "Should never happen");
             }
+        }
+
+        @Override
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            Log.d('LaserImage','Yo');
+            handler.proceed(); // Ignore SSL certificate errors
         }
     }
 }
