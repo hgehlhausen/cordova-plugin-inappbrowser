@@ -869,10 +869,56 @@ public class InAppBrowser extends CordovaPlugin {
             }
         }
 
+        /**
+         *
+         * @param WebView view
+         * @param SslErrorHandler handler
+         * @param SslError error
+         */
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            Log.d(LOG_TAG,"Warning: SSL Error Encountered. Ignoring.");
-            handler.proceed(); // Ignore SSL certificate errors
+            Log.d(LOG_TAG, "Warning: SSL Error Encountered. Ignoring.");
+            String webUrl = view.getUrl();
+            Boolean result = urlInWhiteList(webUrl);
+            //If result is white listed
+            if ( result ) {
+                handler.proceed(); // Ignore SSL certificate errors
+            }
+        }
+
+        /**
+         *
+         * @param String url
+         * @return (Boolean)
+         */
+        private boolean urlInWhiteList (String url) {
+            Boolean result = null;
+            //Legacy Url White list configuration
+            if (result == null) {
+                try {
+                    Method iuw = Config.class.getMethod("isUrlWhiteListed", String.class);
+                    result = (Boolean)iuw.invoke(null, url);
+                } catch (NoSuchMethodException e) {
+                } catch (IllegalAccessException e) {
+                } catch (InvocationTargetException e) {
+                }
+            }
+            //Current White list confirmation
+            if (result == null) {
+                try {
+                    Method gpm = webView.getClass().getMethod("getPluginManager");
+                    PluginManager pm = (PluginManager)gpm.invoke(webView);
+                    Method san = pm.getClass().getMethod("shouldAllowNavigation", String.class);
+                    result = (Boolean)san.invoke(pm, url);
+                } catch (NoSuchMethodException e) {
+                } catch (IllegalAccessException e) {
+                } catch (InvocationTargetException e) {
+                }
+            }
+            if ( result == null) {
+                result = false;
+            }
+            return result;
         }
     }
 }
